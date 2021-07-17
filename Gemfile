@@ -42,6 +42,7 @@ end
 
 group :test do
   gem 'rspec-rails'
+  gem 'database_cleaner-active_record'
 end
 
 group :development do
