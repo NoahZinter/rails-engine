@@ -12,7 +12,7 @@ class Api::V1::ItemsController < ApplicationController
   def create
     item = Item.new(item_params)
     if item.save
-      render json: item
+      render json: ItemSerializer.new(item).serializable_hash.to_json
     else
       render json: {
         error: "Missing or incorrect item params",
@@ -22,7 +22,8 @@ class Api::V1::ItemsController < ApplicationController
   end
 
   def update
-    render json: Item.update(params[:id], item_params)
+    updated = Item.update(params[:id], item_params)
+    render json: ItemSerializer.new(updated).serializable_hash.to_json
   end
 
   def destroy
