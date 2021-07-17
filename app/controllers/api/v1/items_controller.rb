@@ -19,13 +19,13 @@ class Api::V1::ItemsController < ApplicationController
     end
   end
 
-  # def update
+  def update
+    render json: Item.update(params[:id], item_params)
+  end
 
-  # end
-
-  # def destroy
-
-  # end
+  def destroy
+    render json: Item.destroy(params[:id])
+  end
 
   private
 

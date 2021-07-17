@@ -112,4 +112,80 @@ RSpec.describe 'Items Requests' do
       expect(created_item.unit_price).not_to eq 50.67
     end
   end
+
+  describe '#update' do
+    it 'can edit all fields of an item' do
+      merch_id = create(:merchant).id
+      original_item = create(:item, merchant_id: merch_id)
+      item_params = {
+        name: 'Weak Leather Hose',
+        description: 'Excellent Hoseyness',
+        unit_price: 50.67
+      }
+      headers = {"CONTENT_TYPE" => "application/json"}
+      patch "/api/v1/items/#{original_item.id}", headers: headers, params: JSON.generate({item: item_params})
+      item = Item.find(original_item.id)
+
+      expect(response.status).to eq 200
+      expect(item.name).not_to eq original_item.name
+      expect(item.name).to eq 'Weak Leather Hose'
+      expect(item.description).not_to eq original_item.description
+      expect(item.description).to eq 'Excellent Hoseyness'
+      expect(item.unit_price).not_to eq original_item.unit_price
+      expect(item.unit_price).to eq 50.67
+    end
+
+    it 'can edit just the name' do
+      merch_id = create(:merchant).id
+      original_item = create(:item, merchant_id: merch_id)
+      item_params = {
+        name: 'Weak Leather Hose'
+      }
+      headers = {"CONTENT_TYPE" => "application/json"}
+      patch "/api/v1/items/#{original_item.id}", headers: headers, params: JSON.generate({item: item_params})
+      item = Item.find(original_item.id)
+
+      expect(response.status).to eq 200
+      expect(item.name).not_to eq original_item.name
+      expect(item.name).to eq 'Weak Leather Hose'
+      expect(item.description).to eq original_item.description
+      expect(item.unit_price).to eq original_item.unit_price
+    end
+
+    it 'does not edit extra attributes' do
+      merch_id = create(:merchant).id
+      original_item = create(:item, merchant_id: merch_id)
+      item_params = {
+        name: 'Weak Leather Hose',
+        nonsense: 'Poppycock'
+      }
+      headers = {"CONTENT_TYPE" => "application/json"}
+      patch "/api/v1/items/#{original_item.id}", headers: headers, params: JSON.generate({item: item_params})
+      item = Item.find(original_item.id)
+
+      expect(response.status).to eq 200
+      expect(item.name).not_to eq original_item.name
+      expect(item.name).to eq 'Weak Leather Hose'
+      expect(item.description).to eq original_item.description
+      expect(item.unit_price).to eq original_item.unit_price
+      expect{item.nonsense}.to raise_error(NoMethodError)
+    end
+    # Explicitly test and render 404 for not found item to edit?
+  end
+
+  describe '#destroy' do
+    it 'deletes an item' do
+      merch_id = create(:merchant).id
+      items_list = create_list(:item, 20, merchant_id: merch_id)
+      item_id = items_list.last.id
+
+      expect(Item.count).to eq 20
+
+      delete "/api/v1/items/#{item_id}"
+
+      expect(response.status).to eq 200
+      expect(Item.count).to eq 19
+      expect{Item.find(item_id)}.to raise_error(ActiveRecord::RecordNotFound)
+    end
+  end
 end
