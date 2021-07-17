@@ -52,4 +52,64 @@ RSpec.describe 'Items Requests' do
       expect(item[:merchant_id]).is_a? Integer
     end
   end
+
+  describe '#create' do
+    it 'creates an item' do
+      merch_id = create(:merchant).id
+      item_params = {
+        name: 'Weak Leather Hose',
+        description: 'Excellent Hoseyness',
+        unit_price: 50.67,
+        merchant_id: merch_id
+      }
+      headers = {"CONTENT_TYPE" => "application/json"}
+      post "/api/v1/items", headers: headers, params: JSON.generate(item: item_params)
+      created_item = Item.last
+
+      expect(response.status).to eq 200
+      expect(created_item.name).to eq 'Weak Leather Hose'
+      expect(created_item.description).to eq 'Excellent Hoseyness'
+      expect(created_item.unit_price).to eq 50.67
+      expect(created_item.merchant_id).to eq merch_id
+    end
+
+    it 'ignores extra attributes' do
+      merch_id = create(:merchant).id
+      item_params = {
+        name: 'Weak Leather Hose',
+        description: 'Excellent Hoseyness',
+        unit_price: 50.67,
+        merchant_id: merch_id,
+        nonsense: 'Horsefeathers'
+      }
+      headers = {"CONTENT_TYPE" => "application/json"}
+      post "/api/v1/items", headers: headers, params: JSON.generate(item: item_params)
+      created_item = Item.last
+
+      expect(response.status).to eq 200
+      expect(created_item.name).to eq 'Weak Leather Hose'
+      expect(created_item.description).to eq 'Excellent Hoseyness'
+      expect(created_item.unit_price).to eq 50.67
+      expect(created_item.merchant_id).to eq merch_id
+      expect{created_item.nonsense}.to raise_error(NoMethodError)
+    end
+
+    it 'does not create with missing attributes' do
+      merch_id = create(:merchant).id
+      create(:item, merchant_id: merch_id)
+      item_params = {
+        name: 'Weak Leather Hose',
+        description: 'Excellent Hoseyness',
+        unit_price: 50.67
+      }
+      headers = {"CONTENT_TYPE" => "application/json"}
+      post "/api/v1/items", headers: headers, params: JSON.generate(item: item_params)
+      created_item = Item.last
+
+      expect(response.status).to eq 400
+      expect(created_item.name).not_to eq 'Weak Leather Hose'
+      expect(created_item.description).not_to eq 'Excellent Hoseyness'
+      expect(created_item.unit_price).not_to eq 50.67
+    end
+  end
 end
