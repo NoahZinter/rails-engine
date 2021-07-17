@@ -234,7 +234,7 @@ RSpec.describe 'Items Requests' do
 
       delete "/api/v1/items/#{item_id}"
 
-      expect(response.status).to eq 200
+      expect(response.status).to eq 204
       expect(Item.count).to eq 19
       expect{Item.find(item_id)}.to raise_error(ActiveRecord::RecordNotFound)
     end
