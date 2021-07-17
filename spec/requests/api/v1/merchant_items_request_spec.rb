@@ -1,4 +1,5 @@
 require 'rails_helper'
+# Add testing for empty item lists
 
 RSpec.describe 'Merchant Items' do
   describe '#index' do

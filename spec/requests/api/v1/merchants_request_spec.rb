@@ -1,5 +1,5 @@
 require 'rails_helper'
-
+  # Pagination. Test no dependent data displayed. Test optional passing of page & per_page params.
 describe 'Merchants Requests' do
   describe '#index' do
     it 'returns list of merchants' do
