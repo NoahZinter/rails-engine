@@ -28,4 +28,28 @@ RSpec.describe 'Items Requests' do
       end
     end
   end
+
+  describe '#show' do
+    # Test 404 response for item which doesn't exist
+    it 'returns info for given item' do
+      merch_id = create(:merchant).id
+      items_list = create_list(:item, 20, merchant_id: merch_id)
+      item_id = items_list.last.id
+
+      get "/api/v1/items/#{item_id}"
+
+      expect(response.status).to eq 200
+
+      item = JSON.parse(response.body, symbolize_names: true)
+
+      expect(item).to have_key(:name)
+      expect(item[:name]).is_a? String
+      expect(item).to have_key(:description)
+      expect(item[:description]).is_a? String
+      expect(item).to have_key(:unit_price)
+      expect(item[:unit_price]).is_a? Float
+      expect(item).to have_key(:merchant_id)
+      expect(item[:merchant_id]).is_a? Integer
+    end
+  end
 end
