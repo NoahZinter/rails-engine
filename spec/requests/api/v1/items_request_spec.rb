@@ -7,24 +7,24 @@ RSpec.describe 'Items Requests' do
       merch_id_2 = create(:merchant).id
       last_item_id = create_list(:item, 20, merchant_id: merch_id).last.id
       create_list(:item, 30, merchant_id: merch_id_2)
-      
+
       get '/api/v1/items'
 
       expect(response.status).to eq 200
 
       items = JSON.parse(response.body, symbolize_names: true)
+      items = items[:data]
 
       expect(items.count).to eq 20
-      expect(items.last[:id]).to eq last_item_id
+      expect(items.last[:id]).to eq last_item_id.to_s
       items.each do |item|
-        expect(item).to have_key(:name)
-        expect(item[:name]).is_a? String
-        expect(item).to have_key(:description)
-        expect(item[:description]).is_a? String
-        expect(item).to have_key(:unit_price)
-        expect(item[:unit_price]).is_a? Float
-        expect(item).to have_key(:merchant_id)
-        expect(item[:merchant_id]).is_a? Integer
+        expect(item[:attributes]).to have_key(:name)
+        expect(item[:attributes][:name]).is_a? String
+        expect(item[:attributes]).to have_key(:description)
+        expect(item[:attributes][:description]).is_a? String
+        expect(item[:attributes]).to have_key(:unit_price)
+        expect(item[:attributes][:unit_price]).is_a? Float
+        expect(item[:attributes]).not_to have_key(:merchant_id)
       end
     end
 
@@ -39,18 +39,17 @@ RSpec.describe 'Items Requests' do
       expect(response.status).to eq 200
 
       items = JSON.parse(response.body, symbolize_names: true)
-
+      items = items[:data]
       expect(items.count).to eq 20
-      expect(items.first[:id]).to eq first_item_id
+      expect(items.first[:id]).to eq first_item_id.to_s
       items.each do |item|
-        expect(item).to have_key(:name)
-        expect(item[:name]).is_a? String
-        expect(item).to have_key(:description)
-        expect(item[:description]).is_a? String
-        expect(item).to have_key(:unit_price)
-        expect(item[:unit_price]).is_a? Float
-        expect(item).to have_key(:merchant_id)
-        expect(item[:merchant_id]).is_a? Integer
+        expect(item[:attributes]).to have_key(:name)
+        expect(item[:attributes][:name]).is_a? String
+        expect(item[:attributes]).to have_key(:description)
+        expect(item[:attributes][:description]).is_a? String
+        expect(item[:attributes]).to have_key(:unit_price)
+        expect(item[:attributes][:unit_price]).is_a? Float
+        expect(item[:attributes]).not_to have_key(:merchant_id)
       end
     end
 
@@ -65,17 +64,17 @@ RSpec.describe 'Items Requests' do
       expect(response.status).to eq 200
 
       items = JSON.parse(response.body, symbolize_names: true)
+      items = items[:data]
 
       expect(items.count).to eq 50
       items.each do |item|
-        expect(item).to have_key(:name)
-        expect(item[:name]).is_a? String
-        expect(item).to have_key(:description)
-        expect(item[:description]).is_a? String
-        expect(item).to have_key(:unit_price)
-        expect(item[:unit_price]).is_a? Float
-        expect(item).to have_key(:merchant_id)
-        expect(item[:merchant_id]).is_a? Integer
+        expect(item[:attributes]).to have_key(:name)
+        expect(item[:attributes][:name]).is_a? String
+        expect(item[:attributes]).to have_key(:description)
+        expect(item[:attributes][:description]).is_a? String
+        expect(item[:attributes]).to have_key(:unit_price)
+        expect(item[:attributes][:unit_price]).is_a? Float
+        expect(item[:attributes]).not_to have_key(:merchant_id)
       end
     end
   end

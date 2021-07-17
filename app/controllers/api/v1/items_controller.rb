@@ -1,6 +1,7 @@
 class Api::V1::ItemsController < ApplicationController
   def index
-    render json: Item.offset(page * per_page).limit(per_page)
+    items = Item.offset(page * per_page).limit(per_page)
+    render json: ItemSerializer.new(items).serializable_hash.to_json
   end
 
   def show
