@@ -1,10 +1,11 @@
 class Api::V1::MerchantsController < ApplicationController
   def index
-    render json: Merchant.offset(page * per_page).limit(per_page)
+    merchants = Merchant.offset(page * per_page).limit(per_page)
+    render json: MerchantSerializer.new(merchants).serializable_hash.to_json
   end
 
   def show
-    render json: Merchant.find(params[:id])
+    merchant = Merchant.find(params[:id])
+    render json: MerchantSerializer.new(merchant).serializable_hash.to_json
   end
-
 end

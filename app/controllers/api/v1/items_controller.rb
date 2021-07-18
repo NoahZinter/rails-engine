@@ -1,16 +1,18 @@
 class Api::V1::ItemsController < ApplicationController
   def index
-    render json: Item.offset(page * per_page).limit(per_page)
+    items = Item.limit(per_page).offset(page * per_page)
+    render json: ItemSerializer.new(items).serializable_hash.to_json
   end
 
   def show
-    render json: Item.find(params[:id])
+    item = Item.find(params[:id])
+    render json: ItemSerializer.new(item).serializable_hash.to_json
   end
 
   def create
     item = Item.new(item_params)
     if item.save
-      render json: item
+      render json: ItemSerializer.new(item).serializable_hash.to_json
     else
       render json: {
         error: "Missing or incorrect item params",
@@ -20,11 +22,12 @@ class Api::V1::ItemsController < ApplicationController
   end
 
   def update
-    render json: Item.update(params[:id], item_params)
+    updated = Item.update(params[:id], item_params)
+    render json: ItemSerializer.new(updated).serializable_hash.to_json
   end
 
   def destroy
-    render json: Item.destroy(params[:id])
+    Item.destroy(params[:id])
   end
 
   private
