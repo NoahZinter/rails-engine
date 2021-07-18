@@ -16,8 +16,8 @@ class Api::V1::MerchantsController < ApplicationController
     else
       render json: {
         error: "Must enter valid name query",
-        status: 404
-      }, status: 404
+        status: 400
+      }, status: 400
     end
   end
 end
