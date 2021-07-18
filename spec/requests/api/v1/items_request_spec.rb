@@ -242,4 +242,38 @@ RSpec.describe 'Items Requests' do
       expect{Item.find(item_id)}.to raise_error(ActiveRecord::RecordNotFound)
     end
   end
+
+  describe '#search' do
+    it 'searches for all matching items' do
+      id = create(:merchant).id
+      create(:item, merchant_id: id, name: 'Pizza Bagels')
+      create(:item, merchant_id: id, name: 'Pizza Donuts')
+      create(:item, merchant_id: id, name: 'Pizza Hotdogs')
+      create(:item, merchant_id: id, name: 'Pizza Curry')
+      create(:item, merchant_id: id, name: 'Pizza Toast')
+      create(:item, merchant_id: id, name: 'Pizza Cake')
+      create(:item, merchant_id: id, name: 'Pizza Muffin')
+      create(:item, merchant_id: id, name: 'Pizza Soda')
+      create(:item, merchant_id: id, name: 'Salad')
+      create(:item, merchant_id: id, name: 'Arugula')
+      create(:item, merchant_id: id, name: 'Grains')
+      get '/api/v1/items/find_all?name=pizza'
+
+      expect(response.status).to eq 200
+
+      items = JSON.parse(response.body, symbolize_names: true)
+      items = items[:data]
+      expect(items.count).to eq 8
+      items.each do |item|
+        expect(item[:attributes]).to have_key(:name)
+        expect(item[:attributes][:name]).is_a? String
+        expect(item[:attributes]).to have_key(:description)
+        expect(item[:attributes][:description]).is_a? String
+        expect(item[:attributes]).to have_key(:unit_price)
+        expect(item[:attributes][:unit_price]).is_a? Float
+        expect(item[:attributes]).to have_key(:merchant_id)
+        expect(item[:attributes][:merchant_id]).is_a? Integer
+      end
+    end
+  end
 end
