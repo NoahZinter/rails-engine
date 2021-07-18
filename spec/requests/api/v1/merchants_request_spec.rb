@@ -135,4 +135,22 @@ describe 'Merchants Requests' do
         expect(merchant[:attributes][:name]).is_a? String
     end
   end
+
+  describe '#search' do
+    it 'searches for a merchant by name' do
+      merch = create(:merchant, name: 'Toys and HamBURGERS')
+      create_list(:merchant, 20)
+      get "/api/v1/merchants/find?name=TOYS"
+      merchant = JSON.parse(response.body, symbolize_names: true)
+      merchant = merchant[:data]
+
+      expect(merchant).to have_key(:id)
+      expect(merchant[:id]).is_a? String
+      expect(merchant).to have_key(:type)
+      expect(merchant[:type]).to eq 'merchant'
+      expect(merchant[:attributes]).to have_key(:name)
+      expect(merchant[:attributes][:name]).is_a? String
+      expect(merchant[:attributes][:name]).to eq merch.name
+    end
+  end
 end

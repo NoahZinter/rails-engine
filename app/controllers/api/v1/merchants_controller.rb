@@ -8,4 +8,16 @@ class Api::V1::MerchantsController < ApplicationController
     merchant = Merchant.find(params[:id])
     render json: MerchantSerializer.new(merchant).serializable_hash.to_json
   end
+
+  def search
+    if params[:name] && params[:name] != ''
+      merchant = Merchant.find_by_name(params[:name])
+      render json: MerchantSerializer.new(merchant).serializable_hash.to_json
+    else
+      render json: {
+        error: "Must enter valid name query",
+        status: 404
+      }, status: 404
+    end
+  end
 end
