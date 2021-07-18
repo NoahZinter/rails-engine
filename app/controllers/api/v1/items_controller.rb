@@ -4,6 +4,18 @@ class Api::V1::ItemsController < ApplicationController
     render json: ItemSerializer.new(items).serializable_hash.to_json
   end
 
+  def search
+    if params[:name] && params[:name] != ''
+      item = Item.find_all_by_name(params[:name])
+      render json: ItemSerializer.new(item).serializable_hash.to_json
+    else
+      render json: {
+        error: "Must enter valid name query",
+        status: 400
+      }, status: 400
+    end
+  end
+
   def show
     item = Item.find(params[:id])
     render json: ItemSerializer.new(item).serializable_hash.to_json
