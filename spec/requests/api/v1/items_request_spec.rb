@@ -24,7 +24,8 @@ RSpec.describe 'Items Requests' do
         expect(item[:attributes][:description]).is_a? String
         expect(item[:attributes]).to have_key(:unit_price)
         expect(item[:attributes][:unit_price]).is_a? Float
-        expect(item[:attributes]).not_to have_key(:merchant_id)
+        expect(item[:attributes]).to have_key(:merchant_id)
+        expect(item[:attributes][:merchant_id]).is_a? Integer
       end
     end
 
@@ -49,7 +50,8 @@ RSpec.describe 'Items Requests' do
         expect(item[:attributes][:description]).is_a? String
         expect(item[:attributes]).to have_key(:unit_price)
         expect(item[:attributes][:unit_price]).is_a? Float
-        expect(item[:attributes]).not_to have_key(:merchant_id)
+        expect(item[:attributes]).to have_key(:merchant_id)
+        expect(item[:attributes][:merchant_id]).is_a? Integer
       end
     end
 
@@ -74,7 +76,8 @@ RSpec.describe 'Items Requests' do
         expect(item[:attributes][:description]).is_a? String
         expect(item[:attributes]).to have_key(:unit_price)
         expect(item[:attributes][:unit_price]).is_a? Float
-        expect(item[:attributes]).not_to have_key(:merchant_id)
+        expect(item[:attributes]).to have_key(:merchant_id)
+        expect(item[:attributes][:merchant_id]).is_a? Integer
       end
     end
   end
@@ -99,7 +102,8 @@ RSpec.describe 'Items Requests' do
       expect(item[:attributes][:description]).is_a? String
       expect(item[:attributes]).to have_key(:unit_price)
       expect(item[:attributes][:unit_price]).is_a? Float
-      expect(item[:attributes]).not_to have_key(:merchant_id)
+      expect(item[:attributes]).to have_key(:merchant_id)
+      expect(item[:attributes][:merchant_id]).is_a? Integer
     end
   end
 
