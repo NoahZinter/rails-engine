@@ -34,7 +34,7 @@ RSpec.describe 'Items Requests' do
       create_list(:item, 20, merchant_id: merch_id)
       first_item_id = create_list(:item, 30, merchant_id: merch_id_2).first.id
 
-      get '/api/v1/items?page=1'
+      get '/api/v1/items?page=2'
 
       expect(response.status).to eq 200
 
