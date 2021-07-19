@@ -1,5 +1,8 @@
 class Merchant < ApplicationRecord
   has_many :items
+  has_many :invoice_items, through: :items
+  has_many :invoices, through: :invoice_items
+  # has_many :transactions, through: :invoices
 
   def self.find_by_name(name)
     Merchant.where("lower(name) like ?", "%#{name.downcase}%").order(:name).limit(1).first
