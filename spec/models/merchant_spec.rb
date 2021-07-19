@@ -29,5 +29,14 @@ RSpec.describe Merchant do
         expect(Merchant.find_by_name('mIKE')).to eq mike
       end
     end
+
+    describe 'top_merchants_by_revenue' do
+      it 'returns top earning merchants' do
+        customer_id = create(:customer).id
+        merchant_id = create(:merchant).id
+        invoice_id =  create(:invoice, customer_id: customer_id, merchant_id: merchant_id).id
+        list = create_list(:transaction, 50, invoice_id: invoice_id)
+      end
+    end
   end
 end
