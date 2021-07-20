@@ -42,15 +42,20 @@ RSpec.configure do |config|
   config.use_transactional_fixtures = true
 
     config.before(:suite) do
-    DatabaseCleaner.strategy = :transaction
-    DatabaseCleaner.clean_with(:truncation)
+    DatabaseCleaner[:active_record].strategy = :deletion
+    ActiveRecord::Base.connection.reset_pk_sequence!('Merchants')
+    ActiveRecord::Base.connection.reset_pk_sequence!('Customers')
+    ActiveRecord::Base.connection.reset_pk_sequence!('Items')
+    ActiveRecord::Base.connection.reset_pk_sequence!('Invoices')
+    ActiveRecord::Base.connection.reset_pk_sequence!('Transactions')
+    ActiveRecord::Base.connection.reset_pk_sequence!('InvoiceItems')
   end
 
-  config.around(:each) do |example|
-    DatabaseCleaner.cleaning do
-      example.run
-    end
-  end
+  # config.around(:each) do |example|
+  #   DatabaseCleaner.cleaning do
+  #     example.run
+  #   end
+  # end
 
   # You can uncomment this line to turn off ActiveRecord support entirely.
   # config.use_active_record = false

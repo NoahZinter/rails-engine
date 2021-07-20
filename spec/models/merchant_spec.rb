@@ -34,8 +34,37 @@ RSpec.describe Merchant do
     end
 
     describe 'top_merchants_by_revenue' do
+      before(:all) do
+        merchants = []
+        20.times do merchants << Merchant.create!(name: Faker::Company.name)
+        end
+        merchant_ids = merchants.map{|merchant| merchant.id }
+        merchants.each do |merchant|
+          10.times{ merchant.items.create!( name: Faker::Commerce.product_name, description: Faker::Lorem.sentence, unit_price: Faker::Commerce.price )}
+        end
+        customers = []
+        20.times { customers << Customer.create!(first_name: Faker::Games::StreetFighter.character, last_name: Faker::Games::ElderScrolls.last_name)}
+        customer_ids = customers.map { |customer| customer.id}
+        invoices = []
+        20.times { invoices << Invoice.create!(customer_id: customer_ids.sample, merchant_id: merchant_ids.sample, status: ['shipped', 'pending', 'cancelled'].sample)}
+        invoices.each do |invoice|
+          10.times{ invoice.transactions.create!(credit_card_number: Faker::Business.credit_card_number, credit_card_expiration_date: Faker::Business.credit_card_expiry_date, result: ['success', 'failed'].sample)}
+        end
+        invoice_ids = invoices.map { |invoice| invoice.id }
+        item_ids = merchants.map {|merchant| merchant.items.map{|item| item.id}}.flatten!
+        invoice_items = []
+        20.times { invoice_items << InvoiceItem.create!(item_id: item_ids.sample, invoice_id: invoice_ids.sample, quantity: Faker::Number.within(range: 2..20), unit_price: Faker::Commerce.price )}
+      end
       it 'returns top earning merchants' do
-        # expect(Merchant.top_merchants_by_revenue(10)).to eq([])
+        top_merchants = Merchant.top_merchants_by_revenue(5)
+        first_revenue = top_merchants.first.revenue
+        last_revenue = top_merchants.last.revenue
+
+        expect(top_merchants).is_a? Array
+        expect(top_merchants.length).to eq 5
+        expect(top_merchants.first).is_a? Merchant
+        expect(top_merchants.first.revenue).is_a? Float
+        expect(first_revenue).to be >= last_revenue
       end
     end
   end

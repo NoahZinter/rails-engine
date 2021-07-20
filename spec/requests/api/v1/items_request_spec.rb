@@ -17,6 +17,7 @@ RSpec.describe 'Items Requests' do
 
       expect(items.count).to eq 20
       expect(items.last[:id]).to eq last_item_id.to_s
+
       items.each do |item|
         expect(item[:attributes]).to have_key(:name)
         expect(item[:attributes][:name]).is_a? String

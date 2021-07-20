@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :invoice do
-    customer_id { Faker::Number.digit }
-    merchant_id { Faker::Number.digit }
+    association :customer
+    association :merchant
     status { ['shipped', 'pending', 'cancelled'].sample }
   end
 end
