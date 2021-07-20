@@ -3,11 +3,6 @@ require 'rails_helper'
 RSpec.describe 'Items Requests' do
   describe '#index' do
     it 'lists all items, 20 per page' do
-      merch_id = create(:merchant).id
-      merch_id_2 = create(:merchant).id
-      last_item_id = create_list(:item, 20, merchant_id: merch_id).last.id
-      create_list(:item, 30, merchant_id: merch_id_2)
-
       get '/api/v1/items'
 
       expect(response.status).to eq 200
@@ -16,7 +11,7 @@ RSpec.describe 'Items Requests' do
       items = items[:data]
 
       expect(items.count).to eq 20
-      expect(items.last[:id]).to eq last_item_id.to_s
+      expect(items.last[:id]).to eq '20'
 
       items.each do |item|
         expect(item[:attributes]).to have_key(:name)
@@ -31,11 +26,6 @@ RSpec.describe 'Items Requests' do
     end
 
     it 'lists the next 20 items' do
-      merch_id = create(:merchant).id
-      merch_id_2 = create(:merchant).id
-      create_list(:item, 20, merchant_id: merch_id)
-      first_item_id = create_list(:item, 30, merchant_id: merch_id_2).first.id
-
       get '/api/v1/items?page=2'
 
       expect(response.status).to eq 200
@@ -43,7 +33,7 @@ RSpec.describe 'Items Requests' do
       items = JSON.parse(response.body, symbolize_names: true)
       items = items[:data]
       expect(items.count).to eq 20
-      expect(items.first[:id]).to eq first_item_id.to_s
+      expect(items.first[:id]).to eq '21'
       items.each do |item|
         expect(item[:attributes]).to have_key(:name)
         expect(item[:attributes][:name]).is_a? String
@@ -57,11 +47,6 @@ RSpec.describe 'Items Requests' do
     end
 
     it 'can list more than 20 if directed' do
-      merch_id = create(:merchant).id
-      merch_id_2 = create(:merchant).id
-      create_list(:item, 20, merchant_id: merch_id).last.id
-      create_list(:item, 30, merchant_id: merch_id_2)
-
       get '/api/v1/items?per_page=50'
 
       expect(response.status).to eq 200
@@ -234,12 +219,12 @@ RSpec.describe 'Items Requests' do
       items_list = create_list(:item, 20, merchant_id: merch_id)
       item_id = items_list.last.id
 
-      expect(Item.count).to eq 20
+      expect(Item.count).to eq 220
 
       delete "/api/v1/items/#{item_id}"
 
       expect(response.status).to eq 204
-      expect(Item.count).to eq 19
+      expect(Item.count).to eq 219
       expect{Item.find(item_id)}.to raise_error(ActiveRecord::RecordNotFound)
     end
   end
