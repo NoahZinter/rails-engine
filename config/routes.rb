@@ -3,6 +3,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       namespace :revenue do
       get '/merchants', to: 'revenue_merchants#top_merchants'
+      get '/merchants/:id', to: 'revenue_merchants#revenue_show'
       get '/items', to: 'revenue_items#top_items'
       end
       get '/merchants/find', to: 'merchants#search'

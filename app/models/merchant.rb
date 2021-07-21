@@ -23,4 +23,5 @@ class Merchant < ApplicationRecord
     .where('transactions.result = ?', 'success')
     .sum('invoice_items.quantity * invoice_items.unit_price')
   end
+  
 end

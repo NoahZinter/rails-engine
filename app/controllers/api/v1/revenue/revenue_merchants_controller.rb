@@ -9,4 +9,9 @@ class Api::V1::Revenue::RevenueMerchantsController < ApplicationController
       render json: data, status: 400
     end
   end
+
+  def revenue_show
+    merchant = Merchant.find(params[:id])
+    render json: MerchantRevenueSerializer.new(merchant).serializable_hash.to_json
+  end
 end

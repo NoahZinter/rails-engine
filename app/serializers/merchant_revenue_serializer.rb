@@ -1,4 +1,6 @@
 class MerchantRevenueSerializer
   include JSONAPI::Serializer
-  attributes :revenue
+  attribute :revenue do |merchant|
+    merchant.total_revenue
+  end
 end
