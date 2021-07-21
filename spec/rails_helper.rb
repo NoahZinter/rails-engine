@@ -36,21 +36,39 @@ RSpec.configure do |config|
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = "#{::Rails.root}/spec/fixtures"
 
-  # If you're not using ActiveRecord, or you'd prefer not to run each of your
+  # If you're not using ActiveRecord, or you'd prefer not to run each of your∏
   # examples within a transaction, remove the following line or assign false
   # instead of true.
   config.use_transactional_fixtures = true
 
     config.before(:suite) do
-    DatabaseCleaner.strategy = :transaction
-    DatabaseCleaner.clean_with(:truncation)
+    DatabaseCleaner[:active_record].strategy = :truncation
+      merchants = []
+      20.times do merchants << Merchant.create!(name: Faker::Company.name)
+      end
+      merchant_ids = merchants.map{|merchant| merchant.id }
+      merchants.each do |merchant|
+        10.times{ merchant.items.create!( name: Faker::Commerce.product_name, description: Faker::Lorem.sentence, unit_price: Faker::Commerce.price )}
+      end
+      customers = []
+      20.times { customers << Customer.create!(first_name: Faker::Games::StreetFighter.character, last_name: Faker::Games::ElderScrolls.last_name)}
+      customer_ids = customers.map { |customer| customer.id}
+      invoices = []
+      20.times { invoices << Invoice.create!(customer_id: customer_ids.sample, merchant_id: merchant_ids.sample, status: ['shipped', 'pending', 'cancelled'].sample)}
+      invoices.each do |invoice|
+        10.times{ invoice.transactions.create!(credit_card_number: Faker::Business.credit_card_number, credit_card_expiration_date: Faker::Business.credit_card_expiry_date, result: ['success', 'failed'].sample)}
+      end
+      invoice_ids = invoices.map { |invoice| invoice.id }
+      item_ids = merchants.map {|merchant| merchant.items.map{|item| item.id}}.flatten!
+      invoice_items = []
+      20.times { invoice_items << InvoiceItem.create!(item_id: item_ids.sample, invoice_id: invoice_ids.sample, quantity: Faker::Number.within(range: 2..20), unit_price: Faker::Commerce.price )}
   end
 
-  config.around(:each) do |example|
-    DatabaseCleaner.cleaning do
-      example.run
-    end
-  end
+  # config.around(:each) do |example|
+  #   DatabaseCleaner.cleaning do
+  #     example.run
+  #   end
+  # end
 
   # You can uncomment this line to turn off ActiveRecord support entirely.
   # config.use_active_record = false
