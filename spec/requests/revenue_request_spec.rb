@@ -22,5 +22,14 @@ RSpec.describe 'Revenue Requests' do
         expect(merchant[:attributes][:revenue]).is_a? Float
       end
     end
+
+    it 'returns an error if no quantity' do
+      get '/api/v1/revenue/merchants?quantity='
+      expect(response.status).to eq 400
+
+      error = JSON.parse(response.body, symbolize_names: true)
+      expect(error[:errors].first[:id]).to eq nil
+      expect(error[:errors].first[:message]).to eq 'invalid quantity'
+    end
   end
 end
