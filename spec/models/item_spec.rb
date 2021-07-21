@@ -30,9 +30,8 @@ RSpec.describe Item do
         expect((Item.find_all_by_name('pizza')).include?(arugula)).to eq false
         expect((Item.find_all_by_name('pizza')).include?(grains)).to eq false
       end
-    end
 
-    it 'returns empty array for nil searches' do
+      it 'returns empty array for nil searches' do
         id = create(:merchant).id
         create(:item, merchant_id: id, name: 'Pizza Bagels')
         create(:item, merchant_id: id, name: 'Pizza Donuts')
@@ -40,6 +39,22 @@ RSpec.describe Item do
 
         expect(Item.find_all_by_name('corn')).is_a? Array
         expect(Item.find_all_by_name('corn')).to eq ([])
+      end
+    end
+
+    describe 'top_by_revenue' do
+      it 'retrieves top x items by revenue' do
+        top = Item.top_by_revenue(5)
+        expect(top).is_a? Array
+        top.each do |item|
+          expect(item).is_a? Item
+          expect(item.id).is_a? Integer
+          expect(item.name).is_a? String
+          expect(item.description).is_a? String
+          expect(item.revenue).is_a? Float
+        end
+        expect(top.first.revenue).to be >= top.last.revenue
+      end
     end
   end
 end
