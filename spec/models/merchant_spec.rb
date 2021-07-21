@@ -36,6 +36,7 @@ RSpec.describe Merchant do
     describe 'top_merchants_by_revenue' do
       it 'returns top earning merchants' do
         top_merchants = Merchant.top_merchants_by_revenue(5)
+
         first_revenue = top_merchants.first.revenue
         last_revenue = top_merchants.last.revenue
 
@@ -50,12 +51,12 @@ RSpec.describe Merchant do
 
   describe 'instance methods' do
     describe 'total revenue' do
-      # it 'returns total revenue' do
-      #   # this and top revenue calc are different. Not sure which is wrong
-      #   merch = Merchant.top_merchants_by_revenue(1).first
-      #   expect(merch).is_a? Merchant
-      #   expect(merch.revenue).is_a? Float
-      # end
+      it 'returns total revenue' do
+        # this and top revenue calc are different. Not sure which is wrong
+        merch = Merchant.top_merchants_by_revenue(1).first
+        expect(merch).is_a? Merchant
+        expect(merch.total_revenue).to eq merch.revenue
+      end
     end
   end
 end
