@@ -5,6 +5,7 @@ Rails.application.routes.draw do
         get '/merchants', to: 'revenue_merchants#top_merchants'
         get '/merchants/:id', to: 'revenue_merchants#revenue_show'
         get '/items', to: 'revenue_items#top_items'
+        get '/unshipped', to: 'invoices#unshipped'
       end
       get '/merchants/find', to: 'merchants#search'
       resources :merchants, only: [:index, :show] do
@@ -17,3 +18,4 @@ Rails.application.routes.draw do
     end
   end
 end
+0

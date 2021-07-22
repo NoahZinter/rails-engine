@@ -9,4 +9,20 @@ RSpec.describe Invoice do
     it { should have_many(:items).through(:invoice_items) }
     it { should have_many(:merchants).through(:items) }
   end
+
+  describe 'class methods' do
+    describe 'pending revenue' do
+      it 'finds total potential revenue of pending invoices' do
+        invoices = Invoice.pending_revenue
+        expect(invoices).is_a? Array
+        invoices.each do |invoice|
+          expect(invoice.id).is_a? Integer
+          expect(invoice.customer_id).is_a? Integer
+          expect(invoice.merchant_id).is_a? Integer
+          expect(invoice.status).to eq 'pending'
+          expect(invoice.potential_revenue).is_a? Float
+        end
+      end
+    end
+  end
 end

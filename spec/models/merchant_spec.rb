@@ -41,7 +41,7 @@ RSpec.describe Merchant do
         last_revenue = top_merchants.last.revenue
 
         expect(top_merchants).is_a? Array
-        expect(top_merchants.length).to eq 5
+        expect(top_merchants.length).to be <= 5
         expect(top_merchants.first).is_a? Merchant
         expect(top_merchants.first.revenue).is_a? Float
         expect(first_revenue).to be >= last_revenue
