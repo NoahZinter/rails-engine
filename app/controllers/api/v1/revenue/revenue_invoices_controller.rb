@@ -5,12 +5,11 @@ class Api::V1::Revenue::RevenueInvoicesController < ApplicationController
       data[:errors] << {id: nil, message: 'invalid quantity'}
       render json: data, status: 400
     elsif params[:quantity] && (params[:quantity] != '')
-      Invoices = Invoice.pending_revenue(params[:quantity])
-      render json: ItemRevenueSerializer.new(items).serializable_hash.to_json
+      invoices = Invoice.pending_revenue(params[:quantity])
+      render json: UnshippedOrderSerializer.new(invoices).serializable_hash.to_json
     else
-      items = Item.top_by_revenue(10)
-      render json: ItemRevenueSerializer.new(items).serializable_hash.to_json
+      invoices = Invoice.pending_revenue(10)
+      render json: UnshippedOrderSerializer.new(invoices).serializable_hash.to_json
     end
-  end
   end
 end
