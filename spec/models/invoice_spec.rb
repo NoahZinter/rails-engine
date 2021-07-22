@@ -13,8 +13,10 @@ RSpec.describe Invoice do
   describe 'class methods' do
     describe 'pending revenue' do
       it 'finds total potential revenue of pending invoices' do
-        invoices = Invoice.pending_revenue
+        invoices = Invoice.pending_revenue(5)
         expect(invoices).is_a? Array
+        expect(invoices.length).to be <= 5
+        expect(invoices.first.potential_revenue).to be >= invoices.last.potential_revenue
         invoices.each do |invoice|
           expect(invoice.id).is_a? Integer
           expect(invoice.customer_id).is_a? Integer
