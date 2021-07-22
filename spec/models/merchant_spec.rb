@@ -54,7 +54,7 @@ RSpec.describe Merchant do
       it 'returns total revenue' do
         merch = Merchant.top_merchants_by_revenue(1).first
         expect(merch).is_a? Merchant
-        expect(merch.total_revenue).to eq merch.revenue
+        expect(merch.total_revenue.round(2)).to eq merch.revenue.round(2)
       end
     end
   end
