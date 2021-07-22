@@ -143,5 +143,13 @@ describe 'Merchants Requests' do
       expect(merchant[:attributes][:name]).is_a? String
       expect(merchant[:attributes][:name]).to eq merch.name
     end
+
+    it 'returns an error if no name entered' do
+      get '/api/v1/merchants/find?name='
+
+      expect(response.status).to eq 400
+      error = JSON.parse(response.body, symbolize_names: true)
+      expect(error[:errors].first[:message]).to eq 'no name entered'
+    end
   end
 end

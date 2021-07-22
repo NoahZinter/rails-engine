@@ -24,7 +24,7 @@ class Api::V1::ItemsController < ApplicationController
   def create
     item = Item.new(item_params)
     if item.save
-      render json: ItemSerializer.new(item).serializable_hash.to_json
+      render json: ItemSerializer.new(item).serializable_hash.to_json, status: 201
     else
       render json: {
         error: "Missing or incorrect item params",

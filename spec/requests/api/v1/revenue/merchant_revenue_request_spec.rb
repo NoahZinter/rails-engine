@@ -33,32 +33,23 @@ RSpec.describe 'Revenue Requests' do
     end
   end
 
-  describe 'items' do
-    it 'returns top x items by revenue' do
-      get '/api/v1/revenue/items?quantity=5'
+  describe 'merchant_revenue' do
+    it 'returns total revenue of a merchant' do
+      id = Merchant.find(10).id
+      get "/api/v1/revenue/merchants/#{id}"
 
       expect(response.status).to eq 200
 
-      items = JSON.parse(response.body, symbolize_names: true)
-      items = items[:data]
-
-      expect(items.count).to eq 5
-      items.each do |item|
-        expect(item).to have_key(:id)
-        expect(item[:id]).is_a? String
-        expect(item).to have_key(:type)
-        expect(item[:type]).to eq 'item_revenue'
-        expect(item[:attributes]).to have_key(:name)
-        expect(item[:attributes][:name]).is_a? String
-        expect(item[:attributes]).to have_key(:description)
-        expect(item[:attributes][:description]).is_a? String
-        expect(item[:attributes]).to have_key(:unit_price)
-        expect(item[:attributes][:unit_price]).is_a? Float
-        expect(item[:attributes]).to have_key(:merchant_id)
-        expect(item[:attributes][:merchant_id]).is_a? Integer
-        expect(item[:attributes]).to have_key(:revenue)
-        expect(item[:attributes][:revenue]).is_a? Float
-      end
+      revenue = JSON.parse(response.body, symbolize_names: true)
+      data = revenue[:data]
+      attributes = revenue[:data][:attributes]
+  
+      expect(data).to have_key(:id)
+      expect(data[:id]).to eq id.to_s
+      expect(data).to have_key(:type)
+      expect(data[:type]).to eq 'merchant_revenue'
+      expect(attributes).to have_key(:revenue)
+      expect(attributes[:revenue]).is_a? Float
     end
   end
 end

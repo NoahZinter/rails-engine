@@ -5,4 +5,14 @@ class Invoice < ApplicationRecord
   has_many :invoice_items
   has_many :items, through: :invoice_items
   has_many :merchants, through: :items
+
+  def self.pending_revenue(quantity)
+    joins(:transactions, :invoice_items)
+    .select('invoices.*, sum(invoice_items.quantity * invoice_items.unit_price) as potential_revenue')
+    .where('invoices.status = ?', 'pending')
+    .where('transactions.result = ?', 'success')
+    .order('potential_revenue desc')
+    .group(:id)
+    .limit(quantity)
+  end
 end

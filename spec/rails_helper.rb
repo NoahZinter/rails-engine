@@ -64,12 +64,6 @@ RSpec.configure do |config|
       20.times { invoice_items << InvoiceItem.create!(item_id: item_ids.sample, invoice_id: invoice_ids.sample, quantity: Faker::Number.within(range: 2..20), unit_price: Faker::Commerce.price )}
   end
 
-  # config.around(:each) do |example|
-  #   DatabaseCleaner.cleaning do
-  #     example.run
-  #   end
-  # end
-
   # You can uncomment this line to turn off ActiveRecord support entirely.
   # config.use_active_record = false
 

@@ -106,7 +106,7 @@ RSpec.describe 'Items Requests' do
       post "/api/v1/items", headers: headers, params: JSON.generate(item: item_params)
       created_item = Item.last
 
-      expect(response.status).to eq 200
+      expect(response.status).to eq 201
       expect(created_item.name).to eq 'Weak Leather Hose'
       expect(created_item.description).to eq 'Excellent Hoseyness'
       expect(created_item.unit_price).to eq 50.67
@@ -126,7 +126,7 @@ RSpec.describe 'Items Requests' do
       post "/api/v1/items", headers: headers, params: JSON.generate(item: item_params)
       created_item = Item.last
 
-      expect(response.status).to eq 200
+      expect(response.status).to eq 201
       expect(created_item.name).to eq 'Weak Leather Hose'
       expect(created_item.description).to eq 'Excellent Hoseyness'
       expect(created_item.unit_price).to eq 50.67
@@ -210,7 +210,6 @@ RSpec.describe 'Items Requests' do
       expect(item.unit_price).to eq original_item.unit_price
       expect{item.nonsense}.to raise_error(NoMethodError)
     end
-    # Explicitly test and render 404 for not found item to edit?
   end
 
   describe '#destroy' do

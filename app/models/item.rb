@@ -9,8 +9,7 @@ class Item < ApplicationRecord
   end
 
   def self.top_by_revenue(quantity)
-    joins(invoices: :invoice_items)
-    .joins(:transactions)
+    joins(invoices: :transactions)
     .select('items.*, sum(invoice_items.quantity * invoice_items.unit_price) as revenue')
     .where('transactions.result = ?', 'success')
     .group(:id)
